@@ -74,7 +74,7 @@ function SegmentationSpike({ image, imageUrl }: Props) {
       const loadModel = async (device: 'webgpu' | 'wasm') => {
         const loadedModel = await SamModel.from_pretrained(MODEL_ID, {
           device,
-          dtype: 'q4',
+          dtype: 'q8',
           revision: MODEL_REVISION,
           progress_callback
         });
