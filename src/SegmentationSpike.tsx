@@ -64,7 +64,7 @@ function SegmentationSpike({ image, imageUrl }: Props) {
       const x = Math.round(pointX * rawImage.width);
       const y = Math.round(pointY * rawImage.height);
       const loadStartedAt = performance.now();
-      setStatus('Preparing a smaller working copy (max 1024px), then loading the tap-to-select model…');
+      setStatus('Preparing a smaller working copy (max 1024px), then loading the CPU/WASM tap-to-select model…');
 
       const progress_callback = (event: { status?: string; progress?: number; file?: string }) => {
         if (event.status === 'progress' && typeof event.progress === 'number') {
@@ -83,9 +83,9 @@ function SegmentationSpike({ image, imageUrl }: Props) {
       }
       const processor = loadedProcessor;
 
-      const loadModel = async (device: 'webgpu' | 'wasm') => {
+      const loadModel = async () => {
         const loadedModel = await SamModel.from_pretrained(MODEL_ID, {
-          device,
+          device: 'wasm',
           dtype: 'q8',
           revision: MODEL_REVISION,
           progress_callback
@@ -96,20 +96,8 @@ function SegmentationSpike({ image, imageUrl }: Props) {
         return loadedModel;
       };
 
-      if ('gpu' in navigator) {
-        try {
-          model = await loadModel('webgpu');
-          setBackend('WebGPU');
-        } catch (webgpuError) {
-          console.warn('WebGPU segmentation loading failed; trying WASM.', webgpuError);
-          setStatus('WebGPU was unavailable for segmentation. Trying the slower WASM fallback…');
-          model = await loadModel('wasm');
-          setBackend('WASM');
-        }
-      } else {
-        model = await loadModel('wasm');
-        setBackend('WASM');
-      }
+      model = await loadModel();
+      setBackend('WASM');
 
       const processedImage = await processor(rawImage);
       const imageEmbeddings = await model.get_image_embeddings({ pixel_values: processedImage.pixel_values });
@@ -206,8 +194,8 @@ function SegmentationSpike({ image, imageUrl }: Props) {
 
       <div className="runtime-note">
         <span className="runtime-dot" />
-        {'gpu' in navigator ? 'WebGPU will be tried first; WASM fallback is available.' : 'WebGPU not detected; will try WASM.'}
-        {' '}Use Wi-Fi for the first download; the model is released after each tap to limit memory pressure.
+        WASM is used for segmentation to avoid the WebGPU path that crashed Safari.
+        {' '}It may run slower; use Wi-Fi for the first download. The model is released after each tap.
       </div>
       <div className="status-box" role="status" aria-live="polite">
         <span className={`status-indicator ${busy ? 'active' : ''}`} />
