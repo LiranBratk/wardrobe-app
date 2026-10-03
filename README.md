@@ -4,9 +4,9 @@ A private, local-first digital wardrobe and outfit generator, built as an instal
 
 ## Current status
 
-This is an early prototype. It currently has device-test screens for local clothing recognition and tap-to-select garment segmentation; it does not yet save a wardrobe or generate outfits.
+This is an early prototype. It currently has a device-test screen for local clothing recognition; it does not yet save a wardrobe or generate outfits. An on-device segmentation prototype was removed after it repeatedly crashed Safari on the target iPhone.
 
-The CLIP test downloads about 190 MB of quantized model files from Hugging Face the first time it runs. The segmentation test downloads about 14 MB of quantized SlimSAM model files. Photos are processed in the browser and are not uploaded by this app.
+The CLIP test downloads about 190 MB of quantized model files from Hugging Face the first time it runs. Its selected photo is processed in the browser and is not uploaded by this app.
 
 ## Run locally
 
@@ -50,7 +50,7 @@ The app code is licensed under MIT. Model weights, model usage terms, and third-
 
 The current spike uses [Xenova/clip-vit-base-patch32](https://huggingface.co/Xenova/clip-vit-base-patch32), pinned to revision `d15189d7028b43f1d3e65039190477f6af591c2a`. Its model repository does not declare a license. The repository references [OpenAI CLIP](https://github.com/openai/CLIP), whose upstream code license is MIT, but its model card says deployment is out of scope and calls for task-specific testing. Rights and suitability must be confirmed before relying on these weights.
 
-The segmentation spike uses [Xenova/slimsam-77-uniform](https://huggingface.co/Xenova/slimsam-77-uniform), pinned to revision `5850ab45f587c112167512ffef949107115e26a0`. Its model repository declares Apache-2.0. The model is used only to test tap-prompt segmentation on the owner's phone; it is not bundled in the app. For the phone test, photos are scaled to a maximum 1024px edge and inference uses WASM to reduce Safari memory pressure; the cutout is a prototype result rather than a full-resolution export.
+An earlier segmentation spike tested [Xenova/slimsam-77-uniform](https://huggingface.co/Xenova/slimsam-77-uniform) (Apache-2.0) in iPhone Safari using WebGPU and WASM. Both paths crashed Safari on the target device, so this prototype was removed. Importing a subject cutout from Photos is not part of the product workflow. The segmentation architecture is being reconsidered, including whether a truly free on-demand server can meet privacy and resource constraints.
 
 ## Project constraints
 
