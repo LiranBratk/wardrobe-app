@@ -116,6 +116,18 @@ function App() {
       console.error('On-device tagging failed.', error);
       setStatus(error instanceof Error ? `Tagging failed: ${error.message}` : 'Tagging failed with an unknown error.');
     } finally {
+      const loadedClassifier = classifier.current;
+      classifier.current = null;
+      if (loadedClassifier) {
+        try {
+          await loadedClassifier.dispose();
+        } catch (error) {
+          console.error('Could not release the on-device model.', error);
+          setStatus((currentStatus) =>
+            `${currentStatus} The model could not be released cleanly; reload the page before another test.`
+          );
+        }
+      }
       setBusy(false);
       setDownloadProgress(null);
     }
@@ -171,7 +183,7 @@ function App() {
         <div className="runtime-note">
           <span className="runtime-dot" />
           {canUseWebGPU ? 'WebGPU detected; WASM fallback is available.' : 'WebGPU not detected; will try WASM.'}
-          {' '}          Use Wi-Fi for the first download. Load and inference times are reported separately; Safari does not expose a reliable page-memory reading.
+          {' '}Use Wi-Fi for the first download. The model is released after each test to limit memory pressure.
         </div>
 
         <button className="primary-button" type="button" onClick={runTagging} disabled={!image || busy}>

@@ -35,6 +35,7 @@ GitHub Actions deploys the static PWA to GitHub Pages when changes are pushed to
 5. Note the backend and cold load/inference times, and whether Safari freezes, reloads, or evicts the page.
 
 The UI reports model-load and inference times separately. iOS Safari does not expose a reliable standard page-memory measurement to the app.
+The spike releases the loaded model after each run to reduce memory pressure when selecting another photo. The downloaded model files remain browser-cached, so subsequent tests do not need to download them again.
 
 ## Privacy and network behavior
 
