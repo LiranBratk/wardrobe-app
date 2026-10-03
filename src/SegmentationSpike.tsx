@@ -3,6 +3,7 @@ import type { RawImage as RawImageType, SamModel as SamModelType } from '@huggin
 
 const MODEL_ID = 'Xenova/slimsam-77-uniform';
 const MODEL_REVISION = '5850ab45f587c112167512ffef949107115e26a0';
+const MAX_IMAGE_EDGE = 1024;
 
 type Point = { x: number; y: number };
 type Props = { image: File | null; imageUrl: string };
@@ -39,9 +40,9 @@ function SegmentationSpike({ image, imageUrl }: Props) {
     if (!image || !element || busy) return;
 
     const rect = element.getBoundingClientRect();
-    const x = Math.round(((clientX - rect.left) / rect.width) * element.naturalWidth);
-    const y = Math.round(((clientY - rect.top) / rect.height) * element.naturalHeight);
-    setPoint({ x: (clientX - rect.left) / rect.width, y: (clientY - rect.top) / rect.height });
+    const pointX = (clientX - rect.left) / rect.width;
+    const pointY = (clientY - rect.top) / rect.height;
+    setPoint({ x: pointX, y: pointY });
     setCutoutUrl('');
     setBusy(true);
     setProgress(null);
@@ -50,9 +51,20 @@ function SegmentationSpike({ image, imageUrl }: Props) {
     try {
       const { AutoProcessor, RawImage, SamModel, SamProcessor, env } = await import('@huggingface/transformers');
       env.useBrowserCache = true;
-      const rawImage = await RawImage.read(image) as RawImageType;
+      const scale = Math.min(1, MAX_IMAGE_EDGE / Math.max(element.naturalWidth, element.naturalHeight));
+      const resizedWidth = Math.max(1, Math.round(element.naturalWidth * scale));
+      const resizedHeight = Math.max(1, Math.round(element.naturalHeight * scale));
+      const canvas = document.createElement('canvas');
+      canvas.width = resizedWidth;
+      canvas.height = resizedHeight;
+      const context = canvas.getContext('2d');
+      if (!context) throw new Error('Could not prepare a smaller working copy of the photo.');
+      context.drawImage(element, 0, 0, resizedWidth, resizedHeight);
+      const rawImage = RawImage.fromCanvas(canvas) as RawImageType;
+      const x = Math.round(pointX * rawImage.width);
+      const y = Math.round(pointY * rawImage.height);
       const loadStartedAt = performance.now();
-      setStatus('Loading the tap-to-select model and preparing the photo on this device…');
+      setStatus('Preparing a smaller working copy (max 1024px), then loading the tap-to-select model…');
 
       const progress_callback = (event: { status?: string; progress?: number; file?: string }) => {
         if (event.status === 'progress' && typeof event.progress === 'number') {

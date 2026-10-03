@@ -50,7 +50,7 @@ The app code is licensed under MIT. Model weights, model usage terms, and third-
 
 The current spike uses [Xenova/clip-vit-base-patch32](https://huggingface.co/Xenova/clip-vit-base-patch32), pinned to revision `d15189d7028b43f1d3e65039190477f6af591c2a`. Its model repository does not declare a license. The repository references [OpenAI CLIP](https://github.com/openai/CLIP), whose upstream code license is MIT, but its model card says deployment is out of scope and calls for task-specific testing. Rights and suitability must be confirmed before relying on these weights.
 
-The segmentation spike uses [Xenova/slimsam-77-uniform](https://huggingface.co/Xenova/slimsam-77-uniform), pinned to revision `5850ab45f587c112167512ffef949107115e26a0`. Its model repository declares Apache-2.0. The model is used only to test tap-prompt segmentation on the owner's phone; it is not bundled in the app.
+The segmentation spike uses [Xenova/slimsam-77-uniform](https://huggingface.co/Xenova/slimsam-77-uniform), pinned to revision `5850ab45f587c112167512ffef949107115e26a0`. Its model repository declares Apache-2.0. The model is used only to test tap-prompt segmentation on the owner's phone; it is not bundled in the app. For the phone test, photos are scaled to a maximum 1024px edge to reduce peak memory use; the cutout is a prototype result rather than a full-resolution export.
 
 ## Project constraints
 
