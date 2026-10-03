@@ -50,7 +50,7 @@ The app code is licensed under MIT. Model weights, model usage terms, and third-
 
 The current spike uses [Xenova/clip-vit-base-patch32](https://huggingface.co/Xenova/clip-vit-base-patch32), pinned to revision `d15189d7028b43f1d3e65039190477f6af591c2a`. Its model repository does not declare a license. The repository references [OpenAI CLIP](https://github.com/openai/CLIP), whose upstream code license is MIT, but its model card says deployment is out of scope and calls for task-specific testing. Rights and suitability must be confirmed before relying on these weights.
 
-An earlier segmentation spike tested [Xenova/slimsam-77-uniform](https://huggingface.co/Xenova/slimsam-77-uniform) (Apache-2.0) in iPhone Safari using WebGPU and WASM. Both paths crashed Safari on the target device, so this prototype was removed. Importing a subject cutout from Photos is not part of the product workflow. The segmentation architecture is being reconsidered, including whether a truly free on-demand server can meet privacy and resource constraints.
+An earlier segmentation spike tested [Xenova/slimsam-77-uniform](https://huggingface.co/Xenova/slimsam-77-uniform) (Apache-2.0) in iPhone Safari using WebGPU and WASM. Both paths crashed Safari on the target device, so this prototype was removed. Importing a subject cutout from Photos is not part of the product workflow. A remote inference service was considered, but is not being pursued: garment photos must remain on-device, and no cloud billing account is approved.
 
 ## Project constraints
 
