@@ -1,0 +1,61 @@
+# Wardrobe
+
+A private, local-first digital wardrobe and outfit generator, built as an installable iPhone PWA.
+
+## Current status
+
+This is an early prototype. The current screen is a device test for local clothing recognition; it does not yet save a wardrobe or generate outfits.
+
+The test downloads about 190 MB of quantized CLIP model files from Hugging Face the first time it runs. The photo is processed in the browser and is not uploaded by this app. The model repository has no explicit license metadata and its upstream model card says deployment is out of scope; this model is for a technical spike only until its rights and suitability are confirmed.
+
+## Run locally
+
+Requires Node.js 20 or later.
+
+```sh
+npm ci
+npm run dev
+```
+
+For a production build:
+
+```sh
+npm run build
+npm run preview
+```
+
+## Try on iPhone
+
+GitHub Actions deploys the static PWA to GitHub Pages when changes are pushed to `main`.
+
+1. In the repository settings, open **Pages** and set the source to **GitHub Actions**.
+2. Wait for the **Deploy PWA to GitHub Pages** workflow to finish successfully.
+3. Open `https://liranbratk.github.io/wardrobe-app/` in Safari on the iPhone. Use **Share → Add to Home Screen** to install the PWA.
+4. Choose a clothing photo and run **Test on-device tagging**. Use Wi-Fi for the initial model download.
+5. Note the backend and cold load/inference times, and whether Safari freezes, reloads, or evicts the page.
+
+The UI reports model-load and inference times separately. iOS Safari does not expose a reliable standard page-memory measurement to the app.
+
+## Privacy and network behavior
+
+- The app has no account, backend, or image-upload endpoint.
+- The selected photo is passed directly to in-browser inference.
+- The model is fetched from Hugging Face on first use; the runtime assets are served with the app. These requests disclose normal connection metadata to those providers, but this app does not send the selected photo or wardrobe data.
+- Browser storage can be evicted. Export/import backups and inventory storage are planned but not implemented yet.
+
+## Model and dependency notices
+
+The app code is licensed under MIT. Model weights, model usage terms, and third-party dependencies are licensed separately; this project does not relicense them. Do not treat the current CLIP model as approved for a released product.
+
+The current spike uses [Xenova/clip-vit-base-patch32](https://huggingface.co/Xenova/clip-vit-base-patch32), pinned to revision `d15189d7028b43f1d3e65039190477f6af591c2a`. Its model repository does not declare a license. The repository references [OpenAI CLIP](https://github.com/openai/CLIP), whose upstream code license is MIT, but its model card says deployment is out of scope and calls for task-specific testing. Rights and suitability must be confirmed before relying on these weights.
+
+## Project constraints
+
+- No paid APIs, subscriptions, or always-on backend.
+- User photos and wardrobe data stay on-device by default.
+- Suggestions must only reference real items in the local inventory.
+- The target is an installable PWA; native iOS/Xcode workflows are not used.
+
+## License
+
+The app code is licensed under the MIT License. See [LICENSE](LICENSE).
