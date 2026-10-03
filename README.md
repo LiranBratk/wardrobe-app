@@ -4,9 +4,9 @@ A private, local-first digital wardrobe and outfit generator, built as an instal
 
 ## Current status
 
-This is an early prototype. The current screen is a device test for local clothing recognition; it does not yet save a wardrobe or generate outfits.
+This is an early prototype. It currently has device-test screens for local clothing recognition and tap-to-select garment segmentation; it does not yet save a wardrobe or generate outfits.
 
-The test downloads about 190 MB of quantized CLIP model files from Hugging Face the first time it runs. The photo is processed in the browser and is not uploaded by this app. The model repository has no explicit license metadata and its upstream model card says deployment is out of scope; this model is for a technical spike only until its rights and suitability are confirmed.
+The CLIP test downloads about 190 MB of quantized model files from Hugging Face the first time it runs. The segmentation test downloads about 14 MB of quantized SlimSAM model files. Photos are processed in the browser and are not uploaded by this app.
 
 ## Run locally
 
@@ -49,6 +49,8 @@ The spike releases the loaded model after each run to reduce memory pressure whe
 The app code is licensed under MIT. Model weights, model usage terms, and third-party dependencies are licensed separately; this project does not relicense them. Do not treat the current CLIP model as approved for a released product.
 
 The current spike uses [Xenova/clip-vit-base-patch32](https://huggingface.co/Xenova/clip-vit-base-patch32), pinned to revision `d15189d7028b43f1d3e65039190477f6af591c2a`. Its model repository does not declare a license. The repository references [OpenAI CLIP](https://github.com/openai/CLIP), whose upstream code license is MIT, but its model card says deployment is out of scope and calls for task-specific testing. Rights and suitability must be confirmed before relying on these weights.
+
+The segmentation spike uses [Xenova/slimsam-77-uniform](https://huggingface.co/Xenova/slimsam-77-uniform), pinned to revision `5850ab45f587c112167512ffef949107115e26a0`. Its model repository declares Apache-2.0. The model is used only to test tap-prompt segmentation on the owner's phone; it is not bundled in the app.
 
 ## Project constraints
 

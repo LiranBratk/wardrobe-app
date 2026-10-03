@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import SegmentationSpike from './SegmentationSpike';
 import type {
   ZeroShotImageClassificationPipeline,
   ZeroShotImageClassificationOutput
@@ -215,6 +216,8 @@ function App() {
           </div>
         )}
       </section>
+
+      <SegmentationSpike image={image} imageUrl={imageUrl} />
 
       <footer className="footnote">
         <span>LOCAL FIRST</span>
